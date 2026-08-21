@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7c948">
+  <title>Orçamento de corrida — Seu Valdir</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app" aria-labelledby="titulo">
+    <header class="topo">
+      <div>
+        <p class="identificacao">TÁXI · SEU VALDIR</p>
+        <h1 id="titulo">Orçamento da corrida</h1>
+      </div>
+      <button class="botao botao-tema" id="alternarTema" type="button" aria-pressed="false">
+        <span aria-hidden="true">☾</span>
+        Modo noturno
+      </button>
+    </header>
+
+    <section class="trajeto" aria-labelledby="tituloTrajeto">
+      <div class="titulo-secao">
+        <div>
+          <p class="etiqueta">TRAJETO SIMULADO</p>
+          <h2 id="tituloTrajeto">Centro → Rodoviária</h2>
+        </div>
+        <span class="estado" id="estadoCorrida">PARADO</span>
+      </div>
+
+      <div class="mapa" id="mapa" aria-label="Representação do trajeto entre o Centro e a Rodoviária">
+        <div class="rota"></div>
+        <span class="ponto inicio" aria-hidden="true">A</span>
+        <span class="carro" id="carro" aria-hidden="true">🚕</span>
+        <span class="ponto chegada" aria-hidden="true">B</span>
+      </div>
+
+      <div class="dados-trajeto">
+        <div><span>Distância</span><strong>8 km</strong></div>
+        <div><span>Tempo</span><strong>20 min</strong></div>
+      </div>
+
+      <div class="campos-valores" aria-labelledby="tituloValores">
+        <h3 id="tituloValores">Digite os valores da corrida</h3>
+        <div class="grade-campos">
+          <label for="valorKm">
+            Valor por km
+            <span class="campo-dinheiro">
+              <span>R$</span>
+              <input id="valorKm" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-label="Valor por quilômetro em reais">
+            </span>
+          </label>
+          <label for="valorMinuto">
+            Valor por minuto
+            <span class="campo-dinheiro">
+              <span>R$</span>
+              <input id="valorMinuto" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-label="Valor por minuto em reais">
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <button class="botao botao-principal" id="iniciarCorrida" type="button">
+        Calcular e iniciar trajeto
+      </button>
+    </section>
+
+    <section class="adicionais" aria-labelledby="tituloAdicionais">
+      <div class="titulo-secao">
+        <div>
+          <p class="etiqueta">VALORES DURANTE A CORRIDA</p>
+          <h2 id="tituloAdicionais">Adicionar cobrança</h2>
+        </div>
+      </div>
+
+      <div class="grade-botoes">
+        <button class="botao botao-valor" id="adicionarPedagio" type="button">
+          <span>Pedágio</span><strong>+ R$ 6,50</strong>
+        </button>
+        <button class="botao botao-valor" id="adicionarEspera" type="button">
+          <span>Espera</span><strong>+ R$ 5,00</strong>
+        </button>
+      </div>
+      <p class="aviso" id="aviso" role="status" aria-live="polite">Inicie o trajeto para adicionar valores.</p>
+    </section>
+
+    <section class="resumo" aria-labelledby="tituloResumo">
+      <div class="resumo-linha">
+        <div>
+          <p class="etiqueta">MOSTRE AO PASSAGEIRO</p>
+          <h2 id="tituloResumo">Valor final</h2>
+        </div>
+        <output id="valorFinal" aria-live="polite">R$ 0,00</output>
+      </div>
+      <p id="detalhesValor">Aguardando o início do trajeto.</p>
+      <button class="botao botao-reiniciar" id="reiniciar" type="button">Começar de novo</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
