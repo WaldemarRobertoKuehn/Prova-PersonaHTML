@@ -12,7 +12,7 @@ function Resumo({ total, detalhes, aoReiniciar }) {
       {/* As chaves colocam dentro do JSX o texto guardado na prop detalhes. */}
       <p>{detalhes}</p>
       {/* aoReiniciar aponta para comecarDeNovo, que esta no App e limpa todos os estados. */}
-      <button className="botao botao-reiniciar" type="button" onClick={aoReiniciar}>Comecar de novo</button>
+      <button className="botao botao-reiniciar" type="button" onClick={aoReiniciar}>Começar de novo</button>
     </section>
   )
 }

@@ -33,11 +33,11 @@ function iniciarCorrida() {
       estadoCorrida.textContent = "EM TRAJETO";
       estadoCorrida.classList.add("ativo");
       mapa.classList.add("em-viagem");
-      botaoIniciar.textContent = "Trajeto iniciado";
+      botaoIniciar.textContent = "Finalizar trajeto";
       campoValorKm.disabled = true;
       campoValorMinuto.disabled = true;
       detalhesValor.textContent = "8 km × R$ " + valorKm.toFixed(2).replace(".", ",") + " + 20 min × R$ " + valorMinuto.toFixed(2).replace(".", ",");
-      aviso.textContent = "Toque em uma cobrança somente quando ela acontecer.";
+      aviso.textContent = "Trajeto iniciado. Pare o carro para adicionar uma cobrança.";
       mostrarTotal();
     }
 
@@ -48,26 +48,51 @@ function iniciarCorrida() {
   }
 }
 
+function finalizarCorrida() {
+  corridaIniciada = false;
+  estadoCorrida.textContent = "PARADO";
+  estadoCorrida.classList.remove("ativo");
+  mapa.classList.remove("em-viagem");
+  botaoIniciar.textContent = "Calcular e iniciar trajeto";
+  campoValorKm.disabled = false;
+  campoValorMinuto.disabled = false;
+  aviso.textContent = "Carro parado. Agora você pode adicionar pedágio ou espera.";
+}
+
+function alternarTrajeto() {
+  if (corridaIniciada == false) {
+    iniciarCorrida();
+  } else {
+    finalizarCorrida();
+  }
+}
+
 function adicionarPedagio() {
   if (corridaIniciada == true) {
+    aviso.textContent = "Pare o trajeto antes de adicionar uma cobrança.";
+  }
+  if (corridaIniciada == false && total > 0) {
     total = total + 6.5;
     aviso.textContent = "Pedágio de R$ 6,50 adicionado.";
     detalhesValor.textContent = "Corrida e valores adicionais incluídos.";
     mostrarTotal();
   }
-  if (corridaIniciada == false) {
+  if (corridaIniciada == false && total == 0) {
     aviso.textContent = "Primeiro, toque em Iniciar trajeto.";
   }
 }
 
 function adicionarEspera() {
   if (corridaIniciada == true) {
+    aviso.textContent = "Pare o trajeto antes de adicionar uma cobrança.";
+  }
+  if (corridaIniciada == false && total > 0) {
     total = total + 5;
     aviso.textContent = "Espera de R$ 5,00 adicionada.";
     detalhesValor.textContent = "Corrida e valores adicionais incluídos.";
     mostrarTotal();
   }
-  if (corridaIniciada == false) {
+  if (corridaIniciada == false && total == 0) {
     aviso.textContent = "Primeiro, toque em Iniciar trajeto.";
   }
 }
@@ -102,7 +127,7 @@ function comecarDeNovo() {
   mostrarTotal();
 }
 
-botaoIniciar.addEventListener("click", iniciarCorrida);
+botaoIniciar.addEventListener("click", alternarTrajeto);
 botaoPedagio.addEventListener("click", adicionarPedagio);
 botaoEspera.addEventListener("click", adicionarEspera);
 botaoTema.addEventListener("click", alternarTema);

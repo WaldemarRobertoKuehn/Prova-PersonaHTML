@@ -2,7 +2,7 @@
 function Topo({ modoNoturno, aoAlternarTema }) {
   return (
     <header className="topo">
-      <div><p className="identificacao">TAXI · SEU VALDIR</p><h1 id="titulo">Orcamento da corrida</h1></div>
+      <div><p className="identificacao">TÁXI · SEU VALDIR</p><h1 id="titulo">Orçamento da corrida</h1></div>
       {/* DECISAO SUA: o tema fica no topo e traz texto, pois o sol atrapalha e um icone sozinho nao seria claro. */}
       {/* onClick recebe a funcao sem parenteses para executa-la somente quando houver o clique. */}
       <button className="botao botao-tema" type="button" aria-pressed={modoNoturno} onClick={aoAlternarTema}>
