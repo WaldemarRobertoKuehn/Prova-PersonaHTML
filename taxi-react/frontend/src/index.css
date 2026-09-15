@@ -1,3 +1,9 @@
+/* Regras extras do app React — complementam o estilo.css.
+   .noturno é adicionado à <div> raiz pelo App.jsx quando o usuário ativa o tema escuro;
+   estas regras ajustam as variáveis de cor para o tema noturno. */
+
+/* Garante que a página tenha sempre pelo menos a altura da janela do navegador,
+   para o fundo cobrir a tela inteira mesmo com pouco conteúdo. */
 html,
 body,
 #root,
@@ -5,6 +11,9 @@ body,
   min-height: 100%;
 }
 
+/* Tema noturno: reescreve as MESMAS variáveis que o :root do estilo.css define,
+   mas com cores escuras. Como todos os estilos usam var(--nome), basta trocar as
+   variáveis para o app inteiro mudar de cor. */
 .noturno {
   color-scheme: dark;
   --fundo: #07121f;
@@ -17,19 +26,23 @@ body,
   background: var(--fundo);
 }
 
+/* No tema escuro, o quadriculado do mapa usa tons escuros no lugar do "gramado" claro. */
 .noturno .mapa {
   background: linear-gradient(135deg, #1d3448 25%, #21382f 25%, #21382f 50%, #1d3448 50%, #1d3448 75%, #21382f 75%);
   background-size: 56px 56px;
 }
 
+/* Pontos A/B e a rota ficam claros para contrastar com o fundo escuro do mapa. */
 .noturno .ponto,
 .noturno .rota {
   background: #d6eaff;
   color: #07121f;
 }
 
+/* Botões desabilitados (usados enquanto o carro está em trajeto):
+   o cursor vira "não permitido", as cores ficam acinzentadas e mais apagadas. */
 .botao:disabled {
   cursor: not-allowed;
-  filter: grayscale(0.8);
-  opacity: 0.55;
+  filter: grayscale(0.8);          /* remove praticamente toda a cor do botão */
+  opacity: 0.55;                   /* deixa o botão semitransparente */
 }

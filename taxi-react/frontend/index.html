@@ -2,13 +2,19 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
+    <!-- favicon da página em formato SVG (imagem vetorial). -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f7c948" />
     <title>Orçamento de corrida — Seu Valdir</title>
   </head>
   <body>
+    <!-- Em um app React, o arquivo HTML funciona quase como um "esqueleto vazio":
+         o conteúdo da página é criado (desenhado) pelo JavaScript dentro da div#root.
+         O Vite injeta aqui os arquivos de CSS compilados em tempo de desenvolvimento. -->
     <div id="root"></div>
+    <!-- type="module" ativa os módulos ES do navegador (import/export).
+         main.jsx é o ponto de entrada: ele importa e renderiza o componente App. -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

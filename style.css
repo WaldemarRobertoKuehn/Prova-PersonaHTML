@@ -1,42 +1,50 @@
+/* ===== Variáveis globais (tema claro) =====
+   :root seleciona o elemento-raiz (html) do documento. As variáveis começam com --
+   e são usadas em toda a folha com var(--nome). Centralizar as cores num único lugar
+   permite mudar o tema inteiro alterando apenas estes valores. */
 :root {
-  color-scheme: light;
-  --fundo: #f3f1eb;
-  --superficie: #ffffff;
-  --texto: #152033;
-  --texto-suave: #556070;
-  --borda: #c7ced8;
-  --amarelo: #f7c948;
-  --amarelo-forte: #e7ab00;
-  --azul: #123b67;
-  --verde: #16734b;
-  --sombra: 0 10px 28px rgba(21, 32, 51, 0.12);
+  color-scheme: light;             /* informa o navegador de que o tema atual é claro */
+  --fundo: #f3f1eb;                /* cor de fundo do app */
+  --superficie: #ffffff;           /* fundo dos cartões (seções) */
+  --texto: #152033;                /* cor principal do texto */
+  --texto-suave: #556070;          /* cor de textos secundários (etiquetas, legendas) */
+  --borda: #c7ced8;                /* cor das bordas dos cartões */
+  --amarelo: #f7c948;              /* cor de destaque (botão principal e resumo) */
+  --amarelo-forte: #e7ab00;        /* amarelo mais escuro (borda do resumo) */
+  --azul: #123b67;                 /* cor de ação (rota, pontos, botões de cobrança) */
+  --verde: #16734b;                /* cor do estado "EM TRAJETO" */
+  --sombra: 0 10px 28px rgba(21, 32, 51, 0.12); /* sombra padrão das seções */
 }
 
+/* box-sizing: border-box faz com que a largura/altura declarada JÁ inclua borda e padding.
+   Isso evita que os elementos "estourem" a largura da tela quando recebem padding. */
 * {
   box-sizing: border-box;
 }
 
 body {
-  min-height: 100vh;
-  margin: 0;
+  min-height: 100vh;               /* altura mínima igual à da janela (100% da viewport) */
+  margin: 0;                       /* remove a margem padrão que o navegador coloca no body */
   background: var(--fundo);
   color: var(--texto);
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 18px;
+  font-size: 18px;                 /* tamanho-base de texto, pensando em leitura em celular */
 }
 
 button {
-  font: inherit;
+  font: inherit;                   /* botões herdam a fonte do body em vez da fonte padrão do navegador */
 }
 
 .app {
-  width: min(100%, 430px);
+  width: min(100%, 430px);         /* no celular ocupa tudo; em telas maiores estica até 430px */
   min-height: 100vh;
-  margin: 0 auto;
+  margin: 0 auto;                  /* centraliza horizontalmente em telas largas */
   padding: 22px 14px 36px;
   background: var(--fundo);
 }
 
+/* Grupo que usa "flex" para colocar os elementos lado a lado e distribuí-los
+   com espaço entre eles (esquerda e direita). */
 .topo,
 .titulo-secao,
 .resumo-linha,
@@ -44,12 +52,12 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 20px;                       /* espaçamento fixo entre os itens */
 }
 
 .topo {
-  align-items: stretch;
-  flex-direction: column;
+  align-items: stretch;            /* estica os itens na altura do contêiner */
+  flex-direction: column;          /* empilha na vertical (identificação acima do botão) */
   margin-bottom: 18px;
 }
 
@@ -62,12 +70,12 @@ button {
 h1,
 h2,
 p {
-  margin-top: 0;
+  margin-top: 0;                   /* tira a margem superior que os navegadores aplicam por padrão */
 }
 
 h1 {
   margin-bottom: 0;
-  font-size: 2.25rem;
+  font-size: 2.25rem;              /* rem multiplica o tamanho-base: 2.25 × 16px */
   line-height: 1.05;
 }
 
@@ -76,15 +84,18 @@ h2 {
   font-size: 1.55rem;
 }
 
+/* .identificacao (nome do app no topo) e .etiqueta (textos de seção) compartilham um
+   estilo de rótulo: texto pequeno, espesso e espaçado entre as letras. */
 .identificacao,
 .etiqueta {
   margin-bottom: 8px;
   color: var(--texto-suave);
   font-size: 0.82rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.08em;          /* espaçamento extra entre as letras */
 }
 
+/* Cada <section> é um cartão: fundo claro, borda arredondada, borda fina e sombra. */
 section {
   margin-bottom: 14px;
   padding: 20px;
@@ -94,6 +105,7 @@ section {
   box-shadow: var(--sombra);
 }
 
+/* Estilo base dos botões: mínimo de 60px de altura para facilitar o toque no celular. */
 .botao {
   min-height: 60px;
   padding: 14px 20px;
@@ -102,22 +114,25 @@ section {
   cursor: pointer;
   font-size: 1.05rem;
   font-weight: 800;
+  /* transição suave de 120ms para cor (filter) e tamanho (transform) ao passar o mouse / clicar */
   transition: transform 120ms ease, filter 120ms ease;
 }
 
 .botao:hover {
-  filter: brightness(0.96);
+  filter: brightness(0.96);        /* ao passar o mouse, o botão fica levemente mais escuro */
 }
 
 .botao:active {
-  transform: scale(0.98);
+  transform: scale(0.98);          /* ao segurar o clique, o botão "encolhe" 2% */
 }
 
+/* O contorno aparece só quando o foco chega pelo teclado (navegação por Tab), nunca no mouse. */
 .botao:focus-visible {
   outline: 4px solid var(--azul);
   outline-offset: 3px;
 }
 
+/* Botão de tema ocupa a largura toda e usa a cor do texto como borda. */
 .botao-tema {
   width: 100%;
   border-color: var(--texto);
@@ -125,48 +140,54 @@ section {
   color: var(--texto);
 }
 
+/* Selo de estado (PARADO / EM TRAJETO): uma "pílula" arredondada com fundo cinza claro. */
 .estado {
   padding: 9px 13px;
-  border-radius: 999px;
+  border-radius: 999px;            /* valor alto para as bordas virarem um círculo perfeito nas pontas */
   background: #e7ebf0;
   color: var(--texto);
   font-weight: 900;
 }
 
+/* Combinando .estado com .ativo (adicionada por JavaScript quando a corrida começa):
+   a pílula fica verde, indicando o trajeto em andamento. */
 .estado.ativo {
   background: #d6f5e6;
   color: var(--verde);
 }
 
+/* Mapa ilustrativo: um quadriculado que lembra um mapa de fundo (blocos claros e verdes). */
 .mapa {
-  position: relative;
+  position: relative;              /* serve de referência para os elementos posicionados dentro (absolute) */
   height: 130px;
   margin: 22px 0 18px;
-  overflow: hidden;
+  overflow: hidden;                /* esconde qualquer conteúdo que saia da caixa */
   border-radius: 14px;
   background: linear-gradient(135deg, #e2eef6 25%, #d7e4d3 25%, #d7e4d3 50%, #e2eef6 50%, #e2eef6 75%, #d7e4d3 75%);
-  background-size: 56px 56px;
+  background-size: 56px 56px;      /* tamanho de cada bloco do "xadrez" */
 }
 
+/* A linha que liga o ponto A ao ponto B, desenhada com um <div> vazio. */
 .rota {
   position: absolute;
-  top: 60px;
+  top: 60px;                       /* centralizado verticalmente dentro dos 130px do mapa */
   right: 48px;
-  left: 48px;
+  left: 48px;                      /* right + left fazem a barra esticar entre os pontos A e B */
   height: 10px;
   border-radius: 10px;
   background: var(--azul);
 }
 
+/* .ponto (A e B) e .carro são posicionados em relação ao mapa (position: absolute). */
 .ponto,
 .carro {
   position: absolute;
   top: 43px;
-  z-index: 2;
-  display: grid;
+  z-index: 2;                      /* ficam acima da rota */
+  display: grid;                   /* usado só para centralizar o conteúdo com place-items */
   width: 44px;
   height: 44px;
-  place-items: center;
+  place-items: center;             /* centraliza o conteúdo (letra/emoji) dentro do círculo */
   border-radius: 50%;
   font-weight: 900;
 }
@@ -177,19 +198,20 @@ section {
 }
 
 .inicio {
-  left: 28px;
+  left: 28px;                      /* posição do ponto A na esquerda */
 }
 
 .chegada {
-  right: 28px;
+  right: 28px;                     /* posição do ponto B na direita */
 }
 
 .carro {
-  left: 76px;
+  left: 76px;                      /* posição inicial (perto do ponto A) */
   font-size: 1.65rem;
-  transition: left 1.8s ease-in-out;
+  transition: left 1.8s ease-in-out; /* quando a classe "em-viagem" muda a posição, a transição anima o movimento */
 }
 
+/* Regra ativada pela classe em-viagem: o carro desliza para a direita, junto ao ponto B. */
 .mapa.em-viagem .carro {
   left: calc(100% - 120px);
 }
@@ -199,13 +221,16 @@ section {
   margin-bottom: 22px;
 }
 
+/* Cada bloco de informação (Distância / Tempo) é uma "caixinha" com borda. */
 .dados-trajeto div {
-  flex: 1;
+  flex: 1;                         /* os dois blocos dividem a largura igualmente */
   padding: 12px;
   border: 2px solid var(--borda);
   border-radius: 12px;
 }
 
+/* Dentro da caixinha, o rótulo (Distância/Tempo) e o valor (8 km/20 min) ficam
+   em linhas separadas (display: block), em vez de lado a lado. */
 .dados-trajeto span,
 .dados-trajeto strong {
   display: block;
@@ -220,6 +245,7 @@ section {
   font-size: 1.5rem;
 }
 
+/* Área onde ficam os dois campos de valor: um bloco com fundo cinza para destacar do cartão. */
 .campos-valores {
   margin-bottom: 22px;
   padding: 20px;
@@ -232,9 +258,10 @@ section {
   font-size: 1.25rem;
 }
 
+/* Grade vertical: cada campo ocupa uma linha inteira. */
 .grade-campos {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr;      /* uma coluna de largura total */
   gap: 14px;
 }
 
@@ -242,22 +269,26 @@ section {
   font-weight: 800;
 }
 
+/* A "caixa" do campo de dinheiro: junta o prefixo R$ e o input numa única moldura. */
 .campo-dinheiro {
   display: flex;
   align-items: center;
   min-height: 64px;
   margin-top: 8px;
-  overflow: hidden;
+  overflow: hidden;                /* mantém a moldura retangular quando o input tem bordas internas */
   border: 3px solid var(--borda);
   border-radius: 12px;
   background: var(--superficie);
 }
 
+/* :focus-within detecta quando QUALQUER elemento DENTRO do .campo-dinheiro recebe foco
+   (neste caso, o input). Isso cria a borda azul que indica "campo selecionado". */
 .campo-dinheiro:focus-within {
   border-color: var(--azul);
-  outline: 3px solid color-mix(in srgb, var(--azul) 30%, transparent);
+  outline: 3px solid color-mix(in srgb, var(--azul) 30%, transparent); /* anel azul translúcido */
 }
 
+/* O prefixo "R$" dentro da caixa do campo. */
 .campo-dinheiro > span {
   padding-left: 15px;
   color: var(--texto-suave);
@@ -265,9 +296,10 @@ section {
   font-weight: 900;
 }
 
+/* O input em si: transparente de fundo para se fundir à moldura, com texto grande. */
 .campo-dinheiro input {
   width: 100%;
-  min-width: 0;
+  min-width: 0;                    /* permite o encolhimento no flex, evitando estouro */
   padding: 13px 15px 13px 8px;
   border: 0;
   outline: 0;
@@ -278,6 +310,7 @@ section {
   font-weight: 900;
 }
 
+/* Botão principal (Calcular e iniciar trajeto): amarelo, grande e chamativo. */
 .botao-principal {
   width: 100%;
   background: var(--amarelo);
@@ -285,6 +318,7 @@ section {
   font-size: 1.3rem;
 }
 
+/* Grade dos botões de cobrança, empilhados na vertical. */
 .grade-botoes {
   display: grid;
   grid-template-columns: 1fr;
@@ -292,6 +326,7 @@ section {
   margin-top: 24px;
 }
 
+/* Botão de cobrança: min-height maior (88px) porque tem nome + valor empilhados. */
 .botao-valor {
   min-height: 88px;
   border-color: var(--azul);
@@ -300,6 +335,7 @@ section {
   text-align: left;
 }
 
+/* Nome e valor da cobrança em linhas separadas dentro do botão. */
 .botao-valor span,
 .botao-valor strong {
   display: block;
@@ -311,6 +347,8 @@ section {
   font-size: 1.3rem;
 }
 
+/* Mensagem de aviso: texto suave; a altura mínima evita que a página "pule"
+   quando o texto aparece e some. */
 .aviso {
   min-height: 27px;
   margin: 16px 0 0;
@@ -318,6 +356,7 @@ section {
   font-weight: 700;
 }
 
+/* Cartão do resumo: fundo amarelo para chamar a atenção do passageiro. */
 .resumo {
   border-color: var(--amarelo-forte);
   background: var(--amarelo);
@@ -325,20 +364,23 @@ section {
 }
 
 .resumo .etiqueta {
-  color: #493b07;
+  color: #493b07;                  /* tom mais escuro sobre o fundo amarelo para manter contraste */
 }
 
+/* <output> do valor final: o MAIOR texto da tela, ajustável com clamp(menor, ideal, maior). */
 output {
   font-size: clamp(2.4rem, 13vw, 4rem);
   font-weight: 900;
-  white-space: nowrap;
+  white-space: nowrap;             /* impede a quebra de linha: "R$ 1.234,56" fica numa linha só */
 }
 
+/* Parágrafo de detalhes dentro do resumo. */
 .resumo > p {
   margin: 20px 0;
   font-weight: 700;
 }
 
+/* Botão "Começar de novo": preto para contrastar com o cartão amarelo. */
 .botao-reiniciar {
   width: 100%;
   border-color: #171717;
@@ -346,6 +388,9 @@ output {
   color: #fff;
 }
 
+/* ===== Tema noturno =====
+   A classe .noturno é adicionada ao <body> pelo JavaScript. Ela apenas reescreve as
+   variáveis de cor: como tudo usa var(--nome), a troca das variáveis troca o tema inteiro. */
 body.noturno {
   color-scheme: dark;
   --fundo: #07121f;
@@ -357,17 +402,22 @@ body.noturno {
   --sombra: 0 10px 28px rgba(0, 0, 0, 0.35);
 }
 
+/* No tema escuro, o mapa usa tons escuros no lugar do "gramado" claro. */
 body.noturno .mapa {
   background: linear-gradient(135deg, #1d3448 25%, #21382f 25%, #21382f 50%, #1d3448 50%, #1d3448 75%, #21382f 75%);
   background-size: 56px 56px;
 }
 
+/* Pontos A/B e a rota ficam claros para contrastar com o fundo escuro do mapa. */
 body.noturno .ponto,
 body.noturno .rota {
   background: #d6eaff;
   color: #07121f;
 }
 
+/* ===== Telas grandes (a partir de 431px de largura) =====
+   Acima de 430px o app "vira" um mockup de celular: ganha borda escura, cantos
+   arredondados e um fundo cinza ao redor, como se fosse um aparelho encostado na mesa. */
 @media (min-width: 431px) {
   body {
     padding: 24px 0;
@@ -375,14 +425,16 @@ body.noturno .rota {
   }
 
   .app {
-    min-height: calc(100vh - 48px);
+    min-height: calc(100vh - 48px); /* desconta o padding do body para a moldura caber na janela */
     overflow: hidden;
-    border: 8px solid #1d2530;
+    border: 8px solid #1d2530;      /* "moldura" do celular */
     border-radius: 34px;
     box-shadow: 0 24px 60px rgba(21, 32, 51, 0.28);
   }
 }
 
+/* ===== Celulares (até 430px de largura) =====
+   Ajustes finos para aproveitar bem a tela pequena. */
 @media (max-width: 430px) {
   .app {
     width: 100%;
@@ -408,6 +460,9 @@ body.noturno .rota {
   }
 }
 
+/* ===== Usuários que pedem menos movimento =====
+   prefers-reduced-motion detecta a preferência do sistema do usuário por menos animações.
+   Nesse caso, removemos todas as transições e o rolar suave. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
