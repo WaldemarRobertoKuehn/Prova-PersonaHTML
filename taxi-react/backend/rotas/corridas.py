@@ -5,6 +5,7 @@ from pathlib import Path
 
 from fastapi import APIRouter
 
+from esquemas.corrida import CorridaCobranca, CorridaInicio, CorridaSaida
 from rotas.adicionais import ADICIONAIS
 
 # O caminho do arquivo que guarda o estado entre uma abertura da tela e outra.
@@ -25,8 +26,8 @@ ESTADO_INICIAL = {
 KM_FIXOS = 8
 MINUTOS_FIXOS = 20
 
-# O prefixo "/api" deixa cada caminho pronto: /api/estado, /api/iniciar e assim por diante.
-router = APIRouter(prefix="/api", tags=["Corrida"])
+# O prefixo "/api" e a tag "Corrida" vêm do include_router no main.py.
+router = APIRouter()
 
 
 def carregar_estado():
@@ -73,16 +74,16 @@ def validar_inicio(km, minuto):
 
 
 @router.get("/estado")
-def obter_estado():
+def obter_estado() -> CorridaSaida:
     # Devolve tudo que a tela usa para se desenhar e a lista de cobranças dos botões.
     return estado_atual()
 
 
 @router.post("/iniciar")
-def iniciar(dados: dict):
-    # O corpo da requisição chega pronto como um dicionário (dados: dict), sem classe de validação.
-    estado["valorKm"] = dados.get("valorKm", "")
-    estado["valorMinuto"] = dados.get("valorMinuto", "")
+def iniciar(dados: CorridaInicio) -> CorridaSaida:
+    # O corpo da requisição é validado pelo esquema CorridaInicio, importado de esquemas/corrida.py.
+    estado["valorKm"] = dados.valorKm
+    estado["valorMinuto"] = dados.valorMinuto
     try:
         numero_km = converter_valor(estado["valorKm"])
         numero_minuto = converter_valor(estado["valorMinuto"])
@@ -105,7 +106,7 @@ def iniciar(dados: dict):
 
 
 @router.post("/parar")
-def parar():
+def parar() -> CorridaSaida:
     # Marca a corrida como parada para liberar pedágio e espera; o total não muda.
     estado["corridaIniciada"] = False
     estado["aviso"] = "Carro parado. Agora você pode adicionar pedágio ou espera."
@@ -114,10 +115,10 @@ def parar():
 
 
 @router.post("/cobranca")
-def adicionar_cobranca(dados: dict):
+def adicionar_cobranca(dados: CorridaCobranca) -> CorridaSaida:
     # Devolve o objeto da cobrança da lista fixa, ou None se o nome não existir.
     adicional = next(
-        (a for a in ADICIONAIS if a["nome"] == dados.get("nome")),
+        (a for a in ADICIONAIS if a["nome"] == dados.nome),
         None,
     )
     if adicional is None:
@@ -136,7 +137,7 @@ def adicionar_cobranca(dados: dict):
 
 
 @router.post("/reiniciar")
-def reiniciar():
+def reiniciar() -> CorridaSaida:
     # Para cada chave do estado inicial, copia o valor de volta: zera o total,
     # para a corrida, esvazia os campos e restaura o aviso e o detalhe.
     for chave, valor in ESTADO_INICIAL.items():

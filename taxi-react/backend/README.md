@@ -4,19 +4,19 @@ API do orçamento de corrida, feita com FastAPI. Ela espelha as regras da tela
 registradas no CONTRATO.md: iniciar e parar o trajeto, adicionar pedágio/espera
 e reiniciar. O estado atual é gravado em `data.json`.
 
-O código segue o corte de `REGRAS_AULA2.md` da UC4: só `def` comum, devolvendo
-dicionário, sem banco, sem Pydantic, sem CORS e sem `async`. O corpo da
-requisição chega como um dicionário (`dados: dict`) — e o frontend consegue
-acessar a API porque o Vite tem um proxy configurado, então CORS não é preciso.
+A organização segue a estrutura do curso até a aula 3: cada recurso tem um
+arquivo de rotas na pasta `rotas/` (nome no plural) e um arquivo de esquemas
+na pasta `esquemas/` (nome no singular), e o `main.py` apenas cria o app,
+registra o CORS e liga os routers com `include_router` informando prefixo e tags.
 
-As rotas ficam divididas em dois arquivos com `APIRouter`:
-
-| Arquivo | Rotas |
-|---|---|
-| `rotas/adicionais.py` | Três rotas com dados fixos na memória (pedágio e espera), incluindo uma com parâmetro de caminho que devolve 404. |
-| `rotas/corrida.py` | Rotas do orçamento: estado, iniciar, parar, cobrança e reiniciar. |
-
-`main.py` só cria o aplicativo e monta os dois routers com `include_router`.
+```
+rotas/
+├── adicionais.py   router, rotas e a lista de cobranças na memória
+└── corridas.py     router e rotas do orçamento da corrida
+esquemas/
+├── adicional.py    esquema de saída AdicionalSaida
+└── corrida.py      esquemas de entrada CorridaInicio/CorridaCobranca e de saída CorridaSaida
+```
 
 ## Como rodar
 
@@ -29,8 +29,7 @@ python -m venv .venv
 ```
 
 A API fica em `http://127.0.0.1:8000`. A documentação interativa com os
-endpoints está em `http://127.0.0.1:8000/docs`. Também funciona com o
-`uvicorn`: `.venv\Scripts\python -m uvicorn main:app --port 8000`.
+endpoints está em `http://127.0.0.1:8000/docs`.
 
 ## Endpoints
 
@@ -47,11 +46,14 @@ endpoints está em `http://127.0.0.1:8000/docs`. Também funciona com o
 
 O corpo de `iniciar` é `{"valorKm": "2,50", "valorMinuto": "0,75"}` e o de
 `cobranca` é `{"nome": "Pedágio"}`. `parar` e `reiniciar` aceitam corpo vazio
-(`{}`). As três rotas de adicionais são apenas leitura dos dados fixos na memória.
+(`{}`). Os corpos e as respostas são validados pelos esquemas Pydantic de
+`esquemas/`. As três rotas de adicionais são apenas leitura dos dados fixos em
+memória, que ficam no próprio arquivo de rotas.
 
 ## Como o frontend se conecta
 
 O Vite usa um proxy configurado em `frontend/vite.config.js`: todas as chamadas
 `/api/...` feitas pelo navegador são repassadas para `http://127.0.0.1:8000`.
-Para rodar os dois juntos: suba o backend acima e, em outra janela, execute
+O backend também libera o CORS para qualquer origem, em `main.py`. Para rodar
+os dois juntos: suba o backend acima e, em outra janela, execute
 `npm run dev` dentro de `frontend/`.

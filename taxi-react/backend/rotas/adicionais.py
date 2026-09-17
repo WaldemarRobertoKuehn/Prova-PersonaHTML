@@ -1,6 +1,8 @@
 # Rotas dos adicionais (pedágio e espera), que são dados fixos guardados na memória.
-# O APIRouter agrupa as rotas deste arquivo: o prefixo completa o caminho de cada uma.
+# O APIRouter agrupa as rotas deste arquivo; o prefixo e as tags vêm do include_router no main.py.
 from fastapi import APIRouter, HTTPException
+
+from esquemas.adicional import AdicionalSaida
 
 # Lista fixa de cobranças que o passageiro pode acrescentar com o carro parado.
 # Ela fica na memória do processo; aqui não há banco de dados.
@@ -9,12 +11,11 @@ ADICIONAIS = [
     {"id": 2, "nome": "Espera", "valor": 5.0, "valorExibido": "+ R$ 5,00"},
 ]
 
-# O prefixo evita repetir "/api/adicionais" no decorador de cada rota.
-router = APIRouter(prefix="/api/adicionais", tags=["Adicionais"])
+router = APIRouter()
 
 
 @router.get("/buscar")
-def buscar_adicionais(valor_maximo: float):
+def buscar_adicionais(valor_maximo: float) -> list[AdicionalSaida]:
     # O parâmetro de consulta chega com tipo declarado (float) na URL:
     # /api/adicionais/buscar?valor_maximo=7
     # A compreensão de lista devolve apenas os adicionais com valor menor ou igual ao pedido.
@@ -22,7 +23,7 @@ def buscar_adicionais(valor_maximo: float):
 
 
 @router.get("/{id}")
-def obter_adicional(id: int):
+def obter_adicional(id: int) -> AdicionalSaida:
     # id é um parâmetro de caminho com tipo declarado: /api/adicionais/1
     # O laço procura o adicional pelo id; se não achar, levanta HTTPException com 404.
     for adicional in ADICIONAIS:
@@ -32,6 +33,6 @@ def obter_adicional(id: int):
 
 
 @router.get("")
-def listar_adicionais():
+def listar_adicionais() -> list[AdicionalSaida]:
     # Devolve a lista fixa completa, com os valores que os botões da tela mostram.
     return ADICIONAIS
