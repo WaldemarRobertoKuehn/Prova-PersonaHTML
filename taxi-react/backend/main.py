@@ -8,10 +8,11 @@ from rotas.corridas import router as corrida_router
 
 app = FastAPI(title="Orçamento da corrida", version="1.0.0")
 
-# O CORS libera o acesso do frontend ao aplicativo.
+# O CORS libera só a origem exata do front em desenvolvimento, o servidor do Vite.
+# Pôr a origem exata, e não "*", impede que qualquer site chame esta API pelo navegador.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173"],
     allow_methods=["*"],
     allow_headers=["*"],
 )

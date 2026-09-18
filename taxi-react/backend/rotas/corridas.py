@@ -1,16 +1,9 @@
 # Rotas do orçamento de corrida de Seu Valdir, separadas em outro arquivo com o APIRouter.
 # Elas espelham as regras do CONTRATO.md: estado, iniciar, parar, cobrança e reiniciar.
-import json
-from pathlib import Path
-
 from fastapi import APIRouter
 
 from esquemas.corrida import CorridaCobranca, CorridaInicio, CorridaSaida
 from rotas.adicionais import ADICIONAIS
-
-# O caminho do arquivo que guarda o estado entre uma abertura da tela e outra.
-# É um arquivo simples, não um banco de dados.
-ARQUIVO_DADOS = Path(__file__).parent.parent / "data.json"
 
 # Estado da tela antes de qualquer interação do usuário.
 ESTADO_INICIAL = {
@@ -29,27 +22,9 @@ MINUTOS_FIXOS = 20
 # O prefixo "/api" e a tag "Corrida" vêm do include_router no main.py.
 router = APIRouter()
 
-
-def carregar_estado():
-    # Lê o que ficou gravado na última corrida; se não existe ou está com erro, volta ao início.
-    if ARQUIVO_DADOS.exists():
-        try:
-            salvo = json.loads(ARQUIVO_DADOS.read_text(encoding="utf-8"))
-            return {**ESTADO_INICIAL, **salvo}
-        except (json.JSONDecodeError, TypeError, ValueError):
-            pass
-    return dict(ESTADO_INICIAL)
-
-
-estado = carregar_estado()
-
-
-def salvar_estado():
-    # Grava o estado atual para a próxima abertura da tela continuar de onde parou.
-    ARQUIVO_DADOS.write_text(
-        json.dumps(estado, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
+# O estado da corrida vive só na memória, num dicionário que começa igual ao ESTADO_INICIAL.
+# Por isso ele se perde quando o servidor reinicia; a próxima abertura da tela volta ao início.
+estado = dict(ESTADO_INICIAL)
 
 
 def estado_atual():
@@ -101,7 +76,6 @@ def iniciar(dados: CorridaInicio) -> CorridaSaida:
         estado["aviso"] = "Trajeto iniciado. Pare o carro para adicionar uma cobrança."
     else:
         estado["aviso"] = "Digite um valor maior que zero para o km e para o minuto."
-    salvar_estado()
     return estado_atual()
 
 
@@ -110,7 +84,6 @@ def parar() -> CorridaSaida:
     # Marca a corrida como parada para liberar pedágio e espera; o total não muda.
     estado["corridaIniciada"] = False
     estado["aviso"] = "Carro parado. Agora você pode adicionar pedágio ou espera."
-    salvar_estado()
     return estado_atual()
 
 
@@ -132,7 +105,6 @@ def adicionar_cobranca(dados: CorridaCobranca) -> CorridaSaida:
         estado["total"] += adicional["valor"]
         estado["detalhes"] = "Corrida e valores adicionais incluídos."
         estado["aviso"] = f"{adicional['nome']} adicionado."
-    salvar_estado()
     return estado_atual()
 
 
@@ -142,5 +114,4 @@ def reiniciar() -> CorridaSaida:
     # para a corrida, esvazia os campos e restaura o aviso e o detalhe.
     for chave, valor in ESTADO_INICIAL.items():
         estado[chave] = valor
-    salvar_estado()
     return estado_atual()
