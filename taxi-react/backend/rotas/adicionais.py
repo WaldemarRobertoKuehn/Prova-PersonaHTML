@@ -1,15 +1,10 @@
-# Rotas dos adicionais (pedágio e espera), que são dados fixos guardados na memória.
-# O APIRouter agrupa as rotas deste arquivo; o prefixo e as tags vêm do include_router no main.py.
+# Rotas dos adicionais (pedágio e espera); o APIRouter agrupa as URLs deste recurso.
+# A rota só traduz a requisição em chamada ao serviço e decide o status de resposta.
+
 from fastapi import APIRouter, HTTPException
 
 from esquemas.adicional import AdicionalSaida
-
-# Lista fixa de cobranças que o passageiro pode acrescentar com o carro parado.
-# Ela fica na memória do processo; aqui não há banco de dados.
-ADICIONAIS = [
-    {"id": 1, "nome": "Pedágio", "valor": 6.5, "valorExibido": "+ R$ 6,50"},
-    {"id": 2, "nome": "Espera", "valor": 5.0, "valorExibido": "+ R$ 5,00"},
-]
+from servicos import adicional as adicional_servico
 
 router = APIRouter()
 
@@ -18,21 +13,21 @@ router = APIRouter()
 def buscar_adicionais(valor_maximo: float) -> list[AdicionalSaida]:
     # O parâmetro de consulta chega com tipo declarado (float) na URL:
     # /api/adicionais/buscar?valor_maximo=7
-    # A compreensão de lista devolve apenas os adicionais com valor menor ou igual ao pedido.
-    return [adicional for adicional in ADICIONAIS if adicional["valor"] <= valor_maximo]
+    # Quem filtra a lista é o serviço, não a rota.
+    return adicional_servico.filtrar_por_valor_maximo(valor_maximo)
 
 
 @router.get("/{id}")
 def obter_adicional(id: int) -> AdicionalSaida:
     # id é um parâmetro de caminho com tipo declarado: /api/adicionais/1
-    # O laço procura o adicional pelo id; se não achar, levanta HTTPException com 404.
-    for adicional in ADICIONAIS:
-        if adicional["id"] == id:
-            return adicional
-    raise HTTPException(status_code=404, detail="Adicional não encontrado.")
+    # Quando o serviço devolve None, a rota responde com 404 — o status é decisão da rota.
+    adicional = adicional_servico.buscar_por_id(id)
+    if adicional is None:
+        raise HTTPException(status_code=404, detail="Adicional não encontrado.")
+    return adicional
 
 
 @router.get("")
 def listar_adicionais() -> list[AdicionalSaida]:
-    # Devolve a lista fixa completa, com os valores que os botões da tela mostram.
-    return ADICIONAIS
+    # Devolve a lista completa, com os valores que os botões da tela mostram.
+    return adicional_servico.listar()

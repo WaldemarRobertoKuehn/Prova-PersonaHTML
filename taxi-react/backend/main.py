@@ -1,18 +1,19 @@
 # Ponto de entrada da API do orçamento de corrida de Seu Valdir.
-# A criação do FastAPI, o CORS e a ligação dos routers ficam aqui; nenhuma rota é escrita neste arquivo.
+# Cria o app, registra o CORS com o endereço vindo da configuração e liga os routers;
+# nenhuma rota é escrita neste arquivo.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from configuracao import ORIGEM_FRONT
 from rotas.adicionais import router as adicionais_router
 from rotas.corridas import router as corrida_router
 
 app = FastAPI(title="Orçamento da corrida", version="1.0.0")
 
-# O CORS libera só a origem exata do front em desenvolvimento, o servidor do Vite.
-# Pôr a origem exata, e não "*", impede que qualquer site chame esta API pelo navegador.
+# O CORS libera só a origem exata do front, vinda do .env por meio de configuracao.py.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[ORIGEM_FRONT],
     allow_methods=["*"],
     allow_headers=["*"],
 )
